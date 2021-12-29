@@ -1,0 +1,57 @@
+----------------------------------------------------------------------------------------------------
+
+# A Si wafer is doped with 1018 As atoms/cm3. What is the equilibrium electron density
+and hole density at 300 K? What is the energy difference (as an absolute value) between the
+Fermi level and intrinsic energy and between the conduction band and Fermi level? What is the
+conduction band effective density of states? Assume that it has equal effective densities of
+states in the conduction and valence bands. Draw the energy band diagram! For Si, the bandgap
+is Eg=1.11 eV and the intrinsic charge carrier density is ni=1.5×1010 cm‐3 #
+
+----------------------------------------------------------------------------------------------------
+
+from __future__ import division, print_function
+from math import exp, sqrt, log
+import math 
+import matplotlib.pyplot as plt
+
+#initialzing needed variables 
+
+q = 1.602e-19 #eV/K
+k_B = 1.38064852e-23 #eV/K
+T = 300 # K
+n_i = float(1.5e10) #/cm^3
+N_a = 0 #/cm^3
+N_d = 1e18 #/cm^3
+E_g = 1.11 #eV
+
+#condition statements for n and p type doping, respectively 
+
+if (N_d > N_a):
+    n_0_approx = N_d - N_a
+    p_0_approx = n_i ** 2 / n_0_approx
+    n_0_exact = (N_d - N_a) / 2 + math.sqrt((N_a - N_d) ** 2 + 4 * n_i ** 2) / 2
+    p_0_exact = n_i ** 2 / n_0_exact
+    E_F_min_E_i = ((k_B*T*math.log(n_0_approx/n_i))/q); # expressed in eV
+    E_C_min_E_F = (E_g/2 - (E_F_min_E_i));
+    N_C = (n_0_exact*exp((E_C_min_E_F)/((k_B*T)/q)));
+else:
+    #(N_a > N_d)
+    p_0_approx = N_a - N_d;
+    n_0_approx = n_i ** 2 / p_0_approx
+    p_0_exact = (N_a - N_d) / 2 + math.sqrt((N_d - N_a) ** 2 + 4 * n_i ** 2) / 2;
+    n_0_exact = n_i ** 2 / p_0_exact;
+    E_F_min_E_i = ((k_B*T*math.log(p_0_approx/n_i))/q); # expressed in eV
+    E_C_min_E_F = (E_g/2 - (E_F_min_E_i));
+    N_V = (p_0_exact*exp((E_C_min_E_F)/((k_B*T)/q)));
+    
+#plotting the band diagram 
+
+y = [0,1.11]
+plt.axhline(y=0.55, color='r', linestyle='-.', linewidth=3, label = 'E_i')
+plt.axhline(y=1.02, color='c', linestyle='-', linewidth=3, label = 'E_f')
+plt.axhline(y=1.11, color='b', linestyle='-', linewidth=3, label = 'E_c')
+plt.axhline(y=0, color='g', linestyle='-', linewidth=3, label = 'E_v')
+plt.legend(bbox_to_anchor =(0.75, 1.15), ncol = 2, labelspacing = 2)
+    
+
+
