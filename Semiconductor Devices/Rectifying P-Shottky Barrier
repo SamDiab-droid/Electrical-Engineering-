@@ -13,6 +13,8 @@ import math
 #initialize variables
 N_a = 1e17
 n_i = 1.5e10
+T = 300
+k_B = 1.38064852e-23 
 q_x = 4.0
 q_phi_m = 4.3
 E_g = 1.11
