@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 
 # A Schottky barrier is formed with metal having a work function of 4.3 eV and p‐type Si
-having an electron affinity of 4.0eV. The Si bandgap is 1.11 eV and its doping is 1017 B atoms/cm3.
-It is at a temperature of 300 K
+having an electron affinity of 4.0eV. The Si bandgap is 1.11 eV and its doping is 10^17 B atoms/cm3.
+It is at a temperature of 300 K. Determine the difference between the intrinsic and fermi level, the
+semiconductor work function, and the barrier at the junction.
 
 --------------------------------------------------------------------------------------------------------
 
