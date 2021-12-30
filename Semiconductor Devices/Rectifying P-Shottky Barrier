@@ -10,11 +10,14 @@ from __future__ import division, print_function
 from math import exp, sqrt, log
 import math 
 
+#initialize variables
 N_a = 1e17
 n_i = 1.5e10
 q_x = 4.0
 q_phi_m = 4.3
 E_g = 1.11
+
+#solve for needed variables
 E_i_min_E_f = (k_B*T)*math.log(N_a/n_i)
 q_phi_s = q_x + E_g/2 + E_i_min_E_f
 q_phi_b = q_x + E_g - q_phi_m
