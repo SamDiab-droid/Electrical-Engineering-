@@ -28,3 +28,4 @@ E_c_min_E_f = (E_g/2) - (E_fn_min_E_i)
 q_phi_s = q_x + (E_c_min_E_f)
 q_Vo = (q_phi_m) - (q_phi_s)
 q_phi_b = (q_phi_m) - (q_x)
+
