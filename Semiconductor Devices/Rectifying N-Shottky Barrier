@@ -1,0 +1,30 @@
+-------------------------------------------------------------------------------------------------------------
+
+# An ideal metal-semiconductor contact is formed on n-type Si having Nd= 5.0×1015  cm-3. The metal work 
+function is qφm= 4.6 eV, and the Si electron affinity is qχ= 4.0 eV. Determine the position of the Fermi
+level in the Si sample, and use this result with the known electron affinity to calculate the semiconductor
+work function qφs. 
+
+-------------------------------------------------------------------------------------------------------------
+
+from __future__ import division, print_function
+from math import exp, sqrt, log
+import math 
+
+#initialize variables
+N_d = 5e15 #cm^-3
+n_i = 1.5e10 # cm^-3
+T = 300 # Kelvin
+k_B = 1.38064852e-23 #cm^-3
+k_T = 0.0259 #eV
+q_x = 4.0 #eV
+q_phi_m = 4.6 #eV
+E_g = 1.11 #eV
+
+#solve for needed variables 
+N_d = n_n
+E_fn_min_E_i = (k_T)*math.log(n_n/n_i)
+E_c_min_E_f = (E_g/2) - (E_fn_min_E_i)
+q_phi_s = q_x + (E_c_min_E_f)
+q_Vo = (q_phi_m) - (q_phi_s)
+q_phi_b = (q_phi_m) - (q_x)
