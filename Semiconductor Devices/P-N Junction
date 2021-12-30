@@ -1,1 +1,66 @@
+--------------------------------------------------------------------------------------------------------------
 
+# A p‐n junction is formed with Si having doping at 1.0×1016 B atoms/cm3 on the p‐side
+and 5.0×1016 P atoms/cm3 on the n‐side. Sketch the energy band diagram across the junction
+and label it with the energy differences between the Fermi, CB, intrinsic, and VB levels.
+For Si, the bandgap is Eg=1.11 eV and the intrinsic charge carrier density is ni=1.5×1010 cm‐3
+
+---------------------------------------------------------------------------------------------------------------
+
+from __future__ import division, print_function
+from math import exp, sqrt, log
+import math 
+import matplotlib.pyplot as plt
+import numpy as np
+
+#initializing variables
+q = 1.602e-19
+k_B = 1.38064852e-23 
+T = 300
+E_g = 1.11*q
+n_i = 1.5E10*1e6
+N_a = 1.0E16*1e6
+N_d = 5.0E16*1e6 
+
+#solving for needed variables
+p_p = N_a
+n_p = n_i**2/p_p
+n_n = N_d 
+n_p = n_i**2/n_p 
+E_ip_min_E_F=k_B*T*log(p_p/n_i)
+E_F_min_E_in=k_B*T*log(n_n/n_i) 
+V_01 = (E_ip_min_E_F + E_F_min_E_in)/q
+V_02 = k_B*T/q*log(N_a*N_d/n_i**2)
+
+#plotting the p-n junction 
+x = [0.5,0.6]
+y = [1.11,0.3750]
+plt.xlim([0,1])
+plt.plot(x,y, color = 'r', linewidth = 3)
+
+x = [0.5,0.6]
+y = [0.55,-0.2216]
+plt.xlim([0,1])
+plt.plot(x,y, color = 'c', linestyle='-.', linewidth = 3)
+
+x = [0.5,0.6]
+y = [0,-0.7350]
+plt.xlim([0,1])
+plt.plot(x,y, color = 'g', linewidth = 3)
+
+
+x = np.linspace(0,1,100)
+y = [0,1.11]
+plt.axhline(y=1.11, xmin = 0, xmax = 0.5, color='r', linestyle='-', linewidth=3, label = 'E_cp')
+plt.axhline(y=0.55, xmin = 0, xmax = 0.5, color='c', linestyle='-.', linewidth=3, label = 'E_ip')
+plt.axhline(y=0.1667, xmin = 0, xmax = 0.5, color='b', linestyle='-', linewidth=3, label = 'E_f')
+plt.axhline(y=0, xmin = 0, xmax = 0.5, color='g', linestyle='-', linewidth=3, label = 'E_vp')
+
+y = [0.375,-0.735]
+plt.axhline(y=-0.2216, xmin = 0.6, xmax = 1.0, color='c', linestyle='-.', linewidth=3, label = 'E_in')
+plt.axhline(y=0.1667, xmin = 0.5, xmax = 1.0, color='b', linestyle='-', linewidth=3, label = 'E_f')
+plt.axhline(y=0.3750, xmin = 0.6, xmax = 1.0, color='r', linestyle='-', linewidth=3, label = 'E_cn')
+plt.axhline(y=-0.7350, xmin = 0.6, xmax = 1.0, color='g', linestyle='-', linewidth=3, label = 'E_vn')
+
+
+plt.legend(bbox_to_anchor =(1.5, 1.15), ncol = 2, labelspacing = 2)
