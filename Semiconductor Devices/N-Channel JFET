@@ -64,21 +64,21 @@ ydata = [0.0, 2.1, 4.2, 6.7, 8.3, 10.1, 10.8, I_Dsat, I_Dsat, I_Dsat, I_Dsat]
 
 xdata = np.asarray(xdata)
 ydata = np.asarray(ydata)
-plt.plot(xdata, ydata, color = 'r', label = 'E_G = 0')
+plt.plot(xdata, ydata, color = 'r', label = 'V_G = 0')
 
 x1data = [0.0, 1.0, 2.0, 3.0, 4.0, V_Dsat1, 6, 7, 8, 9, 10]
 y1data = [0.0, 2.2, 3.4, I_Dsat1, I_Dsat1, I_Dsat1,I_Dsat1,I_Dsat1,I_Dsat1,I_Dsat1,I_Dsat1]
 
 x1data = np.asarray(x1data)
 y1data = np.asarray(y1data)
-plt.plot(x1data, y1data, color = 'b', label = 'E_G = -3')
+plt.plot(x1data, y1data, color = 'b', label = 'V_G = -3')
 
 x2data = [0.0, 1.0, V_Dsat2, 3, 4, 5, 6, 7, 8, 9, 10]
 y2data = [0.0, I_Dsat2, I_Dsat2, I_Dsat2, I_Dsat2, I_Dsat2,I_Dsat2,I_Dsat2,I_Dsat2,I_Dsat2,I_Dsat2]
 
 x2data = np.asarray(x2data)
 y2data = np.asarray(y2data)
-plt.plot(x2data, y2data, color = 'g', label = 'E_G = -6')
+plt.plot(x2data, y2data, color = 'g', label = 'V_G = -6')
 
 
 plt.legend(bbox_to_anchor =(1.7, 1.15), ncol = 2, labelspacing = 2)
