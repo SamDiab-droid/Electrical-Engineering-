@@ -1,1 +1,168 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENGR 362 Project Template File
+% student name: Sam Diab
+% student number: 13888318
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Clear all
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all, clear, clc
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Import audio data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+y = importdata('ENGR_362_guitar_Fs_is_48000_Hz.txt');
+Fs = 48000;                             % sampling freq
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Play sound of raw audio data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+soundsc(y,Fs)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graph in time domain
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ts = 1/Fs;                              % sampling period       
+Length_y = length(y(:,1));              % length of signal
+time = (0:Length_y-1)*Ts;               % time vector
+figure,plot(time,y), axis tight
+title('y(t) vs t')                      % labels
+xlabel('t (s)')                         % labels
+ylabel('y(t)')                          % labels
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graph with DFT/FFT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Y = fft(y);                             % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0  max(f_kHz) 0 max(F2)])         % axis details
+title('Y(F) vs F')                      % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% D major chord frequencies for notes D3, A3, D4, F#4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+D3 = 146.83;                            % freq of note D3 [Hz]
+D3I = round(D3/max(f)*length(f))     % associated integer to above freq
+A3 = 220.00;                            % freq of note A3 [Hz]
+A3I = round(A3/max(f)*length(f))     % associated integer to above freq
+D4 = 293.66;                            % freq of note D4 [Hz]
+D4I = round(D4/max(f)*length(f))     % associated integer to above freq
+F_sharp_4 = 369.99;                     % freq of note F#4 [Hz]
+F_sharp_4_I = ...
+    round(F_sharp_4/max(f)*length(f))   % associated integer to above freq
+
+note_freq = [D3 A3 D4 F_sharp_4];       % vector of all note freqs
+note_freq_I = ...
+  [D3I A3I D4I F_sharp_4_I]; % vector of all int note freqs
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% loop to apply filter bank
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+nyquist = Fs/2      %nyquist frequency
+order = [4 7 7 7]   %differing orders
+Rp=6                %bandpass ripple peak-peak
+chord = [D3 A3 D4 F_sharp_4]; %placing different chords in matrix for loop
+for i=1:4  %start of loop
+    n = order(i);
+    FcLPF = chord(i)+5;
+    FcHPF = chord(i)-5;
+    Wp = FcLPF/nyquist;
+    Wp1 = FcHPF/nyquist;
+    [b,a] = cheby1(n,Rp,Wp,"high");     % High pass filter
+    [b1,a1] = cheby1(n,Rp,Wp1,"low");   % Low pass filter
+    figure, freqz(b,a)   %Frequency response of filters
+    figure, freqz(b1,a1) %Frequency response of filters
+    figure,plot(abs(freqz(b,a).*freqz(b1,a1))) %plotting bandpass filters
+    axis([1 20 0 1])
+    if i == 1  
+       D3filter = filter(b1,a1, filter(b,a,y));  %Filter D3
+    elseif i == 2
+        A3filter = filter(b1,a1, filter(b,a,y)); %Filter A3
+    elseif i == 3
+        D4filter = filter(b1,a1, filter(b,a,y)); %Filter D4
+    else
+        F4filter = filter(b1,a1, filter(b,a,y)); %Filter F4
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plotting the individual filters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Y = fft(D3filter);                      % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0 0.6 0 max(F2)])                 % axis details
+title('D3 vs F')                        % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
+maxD3 = max(F2)                         % Assigning note D3 to the max of half of frequency
+
+Y = fft(A3filter);                      % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0 0.6 0 max(F2)])                 % axis details
+title('A3 vs F')                        % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
+maxA3 = max(F2)                         % Assigning note A3 to the max of half of frequency
+
+Y = fft(D4filter);                      % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0 0.6 0 max(F2)])                 % axis details
+title('D4 vs F')                        % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
+maxD4 = max(F2)                         % Assigning note D4 to the max of half of frequency
+
+Y = fft(F4filter);                      % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0 0.6 0 max(F2)])                 % axis details
+title('F4 vs F')                        % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
+maxF4 = max(F2)                         % Assigning note F4 to the max of half of frequency
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plotting the Recombined Filter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Recombine = D3filter/maxD3 + A3filter/maxA3 + D4filter/maxD4 + F4filter/maxF4; %Normalizing and recombining
+Y = fft(Recombine);                     % Discrete Fourier transform
+F1 = abs(Y/Length_y);                   % frequency
+F2 = F1(1:Length_y/2+1);                % half of frequency
+F2(2:end-1) = 2*F2(2:end-1);            % Discrete Fourier transform
+f = Fs*(0:(Length_y/2))/Length_y;       % freq vector [Hz]
+f_kHz = f/1000;                         % freq vector [kHz]
+figure,plot(f_kHz,F2)                   % plot 
+axis([0 0.6 0 max(F2)])                 % axis details
+title('Normal vs F')                    % labels
+xlabel('F (kHz)')                       % labels
+ylabel('Y(F)')                          % labels
